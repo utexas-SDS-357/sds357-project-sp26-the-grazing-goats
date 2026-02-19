@@ -8,7 +8,7 @@ import numpy as np
 import os
 from pathlib import Path
 
-# ── Configuration ──────────────────────────────────────────────────────────
+# ── Configuration
 DATA_DIR = Path("/Users/harsha/SDS357 project /Stanford Data")
 OUTPUT_DIR = Path("/Users/harsha/SDS357 project ")
 
@@ -21,7 +21,7 @@ FILES = {
     "Winston-Salem": "nc_winston-salem_2020_04_01.csv",
 }
 
-# ── 1. Load and combine ───────────────────────────────────────────────────
+# ── 1. Load and combine
 print("Loading city files...")
 raw_info = {}  # store per-city raw metadata for the summary
 frames = []
@@ -39,13 +39,13 @@ total_raw_rows = len(raw_combined)
 raw_columns = list(raw_combined.columns)
 print(f"\nCombined raw dataset: {total_raw_rows:,} rows, {len(raw_columns)} columns")
 
-# ── 2. Standardize column names ──────────────────────────────────────────
+# ── 2. Standardize column names 
 # All files already share the same schema, but enforce lowercase snake_case
 rename_map = {c: c.lower().replace(" ", "_") for c in raw_combined.columns}
 raw_combined.rename(columns=rename_map, inplace=True)
 print(f"Columns after rename: {list(raw_combined.columns)}")
 
-# ── 3. Parse dates and times / engineer temporal features ────────────────
+# ── 3. Parse dates and times / engineer temporal features
 print("\nParsing dates and times...")
 raw_combined["date"] = pd.to_datetime(raw_combined["date"], errors="coerce")
 raw_combined["time"] = pd.to_datetime(raw_combined["time"], format="%H:%M:%S", errors="coerce").dt.time
@@ -57,7 +57,7 @@ raw_combined["hour"] = pd.to_datetime(
     raw_combined["time"].astype(str), format="%H:%M:%S", errors="coerce"
 ).dt.hour
 
-# ── 4. Standardize categorical variables ─────────────────────────────────
+# ── 4. Standardize categorical variables 
 print("Standardizing categorical variables...")
 
 # --- subject_race ---
@@ -82,7 +82,7 @@ raw_combined["subject_race"] = (
     .fillna("unknown")
 )
 
-# --- subject_sex ---
+# --- subject_sex 
 sex_map = {
     "male": "male",
     "female": "female",
@@ -100,7 +100,7 @@ raw_combined["subject_sex"] = (
     .fillna("unknown")
 )
 
-# --- reason_for_stop ---
+# --- reason_for_stop 
 raw_combined["reason_for_stop"] = (
     raw_combined["reason_for_stop"]
     .astype(str)
@@ -119,7 +119,7 @@ raw_combined["outcome"] = (
     .str.lower()
 )
 
-# --- boolean columns: normalize TRUE/FALSE/NA strings to bool/NaN ---
+# --- boolean columns: normalize TRUE/FALSE/NA strings to bool/NaN 
 bool_cols = [
     "arrest_made", "citation_issued", "warning_issued",
     "contraband_found", "contraband_drugs", "contraband_weapons",
@@ -134,7 +134,7 @@ for col in bool_cols:
         .map({"TRUE": True, "FALSE": False})
     )
 
-# ── 5. Missing-value analysis ────────────────────────────────────────────
+# ── 5. Missing-value analysis
 print("\nComputing missingness rates...")
 
 # Per-city per-column missingness
@@ -161,7 +161,7 @@ raw_combined["outcome_missing"] = raw_combined["outcome"].isin(["nan", "na", ""]
 n_outcome_missing = raw_combined["outcome_missing"].sum()
 print(f"Rows flagged with missing outcome: {n_outcome_missing:,}")
 
-# ── 6. Create binary arrested variable ───────────────────────────────────
+# ── 6. Create binary arrested variable 
 print("Creating arrested binary variable...")
 
 # Primary: use arrest_made boolean column (most reliable)
@@ -176,7 +176,7 @@ raw_combined["arrested"] = np.where(
 arrest_counts = raw_combined["arrested"].value_counts()
 print(f"Arrested distribution:\n{arrest_counts}")
 
-# ── 7. Filter to relevant columns ────────────────────────────────────────
+# ── 7. Filter to relevant columns 
 keep_cols = [
     "date", "time", "city",
     "subject_race", "subject_sex", "subject_age",
@@ -191,12 +191,12 @@ keep_cols = [c for c in keep_cols if c in raw_combined.columns]
 
 cleaned = raw_combined[keep_cols].copy()
 
-# ── 8. Save cleaned CSV ──────────────────────────────────────────────────
+# ── 8. Save cleaned CSV 
 out_csv = OUTPUT_DIR / "nc_traffic_stops_cleaned.csv"
 cleaned.to_csv(out_csv, index=False)
 print(f"\nSaved cleaned data to {out_csv}")
 
-# ── 9. Print summary ─────────────────────────────────────────────────────
+# ── 9. Print summary
 print("\n" + "=" * 60)
 print("CLEANED DATASET SUMMARY")
 print("=" * 60)
