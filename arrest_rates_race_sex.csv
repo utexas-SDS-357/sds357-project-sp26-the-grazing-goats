@@ -1,0 +1,9 @@
+subject_race,subject_sex,n_stops,n_arrests,arrest_rate
+asian/pacific islander,female,24463,152,0.621
+asian/pacific islander,male,42739,757,1.771
+black,female,858461,11370,1.324
+black,male,1277235,52768,4.131
+hispanic,female,97469,1059,1.086
+hispanic,male,294443,16392,5.567
+white,female,662119,8478,1.28
+white,male,1006428,23729,2.358

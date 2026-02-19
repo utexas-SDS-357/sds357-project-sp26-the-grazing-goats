@@ -1,0 +1,41 @@
+subject_race,reason_for_stop,n_stops,n_arrests,arrest_rate
+asian/pacific islander,Checkpoint,80,9,11.25
+asian/pacific islander,Driving While Impaired,444,249,56.081
+asian/pacific islander,Investigation,1745,68,3.897
+asian/pacific islander,Other Motor Vehicle Violation,2615,56,2.141
+asian/pacific islander,Safe Movement Violation,5801,67,1.155
+asian/pacific islander,Seat Belt Violation,1819,22,1.209
+asian/pacific islander,Speed Limit Violation,27826,202,0.726
+asian/pacific islander,Stop Light/Sign Violation,7924,45,0.568
+asian/pacific islander,Vehicle Equipment Violation,6259,67,1.07
+asian/pacific islander,Vehicle Regulatory Violation,12689,124,0.977
+black,Checkpoint,5446,301,5.527
+black,Driving While Impaired,8908,5011,56.253
+black,Investigation,100503,9997,9.947
+black,Other Motor Vehicle Violation,118229,6385,5.401
+black,Safe Movement Violation,122087,4041,3.31
+black,Seat Belt Violation,85254,2727,3.199
+black,Speed Limit Violation,565639,7392,1.307
+black,Stop Light/Sign Violation,140562,2987,2.125
+black,Vehicle Equipment Violation,275714,7577,2.748
+black,Vehicle Regulatory Violation,713354,17720,2.484
+hispanic,Checkpoint,3195,73,2.285
+hispanic,Driving While Impaired,6632,4962,74.819
+hispanic,Investigation,30652,1723,5.621
+hispanic,Other Motor Vehicle Violation,37438,1586,4.236
+hispanic,Safe Movement Violation,26967,1550,5.748
+hispanic,Seat Belt Violation,11271,286,2.537
+hispanic,Speed Limit Violation,97572,2235,2.291
+hispanic,Stop Light/Sign Violation,29569,792,2.678
+hispanic,Vehicle Equipment Violation,46924,1455,3.101
+hispanic,Vehicle Regulatory Violation,101692,2789,2.743
+white,Checkpoint,2163,241,11.142
+white,Driving While Impaired,14275,9916,69.464
+white,Investigation,44765,3101,6.927
+white,Other Motor Vehicle Violation,71694,2145,2.992
+white,Safe Movement Violation,104316,2703,2.591
+white,Seat Belt Violation,57494,647,1.125
+white,Speed Limit Violation,670107,5175,0.772
+white,Stop Light/Sign Violation,133571,1475,1.104
+white,Vehicle Equipment Violation,134275,2097,1.562
+white,Vehicle Regulatory Violation,435887,4707,1.08
