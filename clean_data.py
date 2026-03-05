@@ -1,16 +1,28 @@
 """
 Clean and preprocess SOPP North Carolina traffic stops data.
-Produces: nc_traffic_stops_cleaned.csv and cleaning_summary.md
+
+Inputs (expected location, relative to this file):
+- raw_data/nc_charlotte_2020_04_01.csv
+- raw_data/nc_durham_2020_04_01.csv
+- raw_data/nc_fayetteville_2020_04_01.csv
+- raw_data/nc_greensboro_2020_04_01.csv
+- raw_data/nc_raleigh_2020_04_01.csv
+- raw_data/nc_winston-salem_2020_04_01.csv
+
+Outputs (written to the same data directory):
+- data/nc_traffic_stops_cleaned.csv
+- data/nc_traffic_stops_cleaned.parquet
+- data/cleaning_summary.md
 """
 
 import pandas as pd
 import numpy as np
-import os
 from pathlib import Path
 
-# ── Configuration
-DATA_DIR = Path("/Users/harsha/SDS357 project /Stanford Data")
-OUTPUT_DIR = Path("/Users/harsha/SDS357 project ")
+# ── Configuration (project‑relative, no user‑specific paths)
+ROOT_DIR = Path(__file__).resolve().parent
+DATA_DIR = ROOT_DIR / "raw_data"
+OUTPUT_DIR = ROOT_DIR / "data"
 
 FILES = {
     "Charlotte": "nc_charlotte_2020_04_01.csv",
@@ -191,10 +203,17 @@ keep_cols = [c for c in keep_cols if c in raw_combined.columns]
 
 cleaned = raw_combined[keep_cols].copy()
 
-# ── 8. Save cleaned CSV 
+# ── 8. Save cleaned data
 out_csv = OUTPUT_DIR / "nc_traffic_stops_cleaned.csv"
+out_parquet = OUTPUT_DIR / "nc_traffic_stops_cleaned.parquet"
+
+OUTPUT_DIR.mkdir(exist_ok=True)
+
 cleaned.to_csv(out_csv, index=False)
-print(f"\nSaved cleaned data to {out_csv}")
+cleaned.to_parquet(out_parquet, index=False)
+
+print(f"\nSaved cleaned CSV to {out_csv}")
+print(f"Saved cleaned Parquet to {out_parquet}")
 
 # ── 9. Print summary
 print("\n" + "=" * 60)
