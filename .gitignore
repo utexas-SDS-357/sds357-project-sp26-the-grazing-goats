@@ -1,0 +1,5 @@
+raw_data/
+data/
+Data/nc_traffic_stops_cleaned.csv
+.venv/
+.DS_Store
