@@ -35,15 +35,15 @@
 
 ### Plot 1 — Overall Outcome Distribution
 
-Citations are the most common outcome (57.3%), followed by warnings (36.8%) and arrests (2.7%). About 139K stops (~3.2%) have missing outcome data. The low arrest rate means the outcome variable is heavily imbalanced — relevant for any predictive modeling.
+Citations are the most common outcome (59.2%), followed by warnings (38.0%) and arrests (2.8%). About 139,872 stops (~3.2%) have missing outcome data. The low arrest rate means the outcome variable is heavily imbalanced — relevant for any predictive modeling.
 
 ### Plot 2 — Outcome Distribution by Race
 
-Hispanic drivers have the highest arrest proportion (4.6%) and the highest citation rate (66.8%), but the lowest warning rate (28.6%) — suggesting officers are less likely to let them off with warnings. Black drivers have a 3.1% arrest share and the highest warning rate (40.4%). Asian/Pacific Islander drivers have the lowest arrest proportion (1.4%).
+Hispanic drivers have the highest arrest proportion and the highest citation rate, but the lowest warning rate — suggesting officers are less likely to let them off with warnings. Black drivers have a moderate arrest share and the highest warning rate. Asian/Pacific Islander drivers have the lowest arrest proportion.
 
 ### Plot 3 — Arrest Rate by Race (with 95% CI)
 
-Hispanic drivers face the highest arrest rate at 4.45%, followed by Black drivers at 3.00%, white drivers at 1.93%, and Asian/Pacific Islander drivers at 1.35%. Confidence intervals are extremely narrow due to sample sizes in the hundreds of thousands to millions, making all pairwise differences statistically significant. Hispanic drivers are arrested at 2.3× the rate of white drivers; Black drivers at 1.55× the white rate.
+Hispanic drivers face the highest arrest rate at 4.45%, followed by Black drivers at 3.00%, white drivers at 1.93%, and Asian/Pacific Islander drivers at 1.35%. Confidence intervals are extremely narrow due to sample sizes in the hundreds of thousands to millions, making all pairwise differences statistically significant. Hispanic drivers are arrested at 2.3× the rate of white drivers; Black drivers at 1.6× the white rate.
 
 ### Plot 4 — Arrest Rate by City
 
@@ -51,7 +51,7 @@ Charlotte has the highest arrest rate (3.41%), followed by Raleigh (2.71%), Durh
 
 ### Plot 5 — Arrest Rate Heatmap: Race × City
 
-The racial hierarchy (Hispanic > Black > White > Asian/PI) holds in every city, though magnitudes vary. Charlotte shows the widest absolute gaps: Hispanic arrest rate 5.41% vs. white 2.34%. Winston-Salem has the narrowest gaps but the same ranking. Durham shows the lowest rates overall across all groups. The consistency of the pattern across six independent police departments is notable.
+The racial hierarchy (Hispanic > Black > White > Asian/PI) holds in every city, though magnitudes vary. Charlotte shows the widest absolute gaps. Winston-Salem has the narrowest gaps but the same ranking. The consistency of the pattern across six independent police departments is notable.
 
 ### Plot 6 — Outcome by Reason for Stop (Top 10)
 
@@ -59,15 +59,15 @@ Speed limit violations are the most common reason, followed by regulatory and eq
 
 ### Plot 7 — Arrest Rate by Reason for Stop × Race
 
-The racial disparity appears across every stop reason category. For safe movement violations, Hispanic drivers face a 5.75% arrest rate vs. 2.59% for white drivers. For speed violations (the most common stop type), Hispanic arrest rates are 2.29% vs. 0.77% for white — a 3× ratio. Even for the lowest-arrest stop reasons, the racial gap is present, indicating it is not an artifact of differential stop reasons.
+The racial disparity appears across every stop reason category. Even for the lowest-arrest stop reasons, the racial gap is present, indicating it is not an artifact of differential stop reasons.
 
 ### Plot 8 — Stops per Year by City
 
-Charlotte dominates in volume, peaking around 2010 at ~152K stops/year before declining to ~114K by 2015. Raleigh is the second largest, peaking at ~88K in 2010. Durham and Raleigh have data starting from 2002–2003, not 2000 — earlier years show near-zero counts, reflecting data availability rather than policing changes. Most cities show declining stop volumes after 2010–2012.
+Charlotte dominates in volume. Most cities show declining stop volumes after 2010–2012. Durham and Raleigh have data starting from 2002–2003, not 2000 — earlier years show near-zero counts, reflecting data availability rather than policing changes.
 
 ### Plot 9 — Arrest Rate Over Time by Race
 
-A striking pattern emerges in the early years: Hispanic arrest rates spike dramatically in 2001 (12.6%) before settling down — likely a data quality artifact from small early samples. After 2004, all groups show a gradual downward trend in arrest rates. The Hispanic > Black > White ranking persists across the entire 2004–2015 period. By 2015, the gap has narrowed somewhat but remains: Hispanic 2.32%, Black 2.15%, White 1.48%.
+After 2004, all groups show a gradual downward trend in arrest rates. The Hispanic > Black > White ranking persists across the entire period. By 2015, the gap has narrowed somewhat but remains.
 
 ### Plot 10 — Stop Volume by Hour of Day
 
@@ -75,31 +75,31 @@ Stops peak during daytime hours (10 AM – 4 PM) across all racial groups, consi
 
 ### Plot 11 — Stop Volume by Day of Week
 
-Weekdays see significantly higher stop volumes than weekends, consistent with commuting patterns. Monday through Thursday are roughly equal (~670K–690K each); Friday is slightly elevated. Saturday and Sunday drop substantially, with Sunday being the lowest-volume day.
+Weekdays see significantly higher stop volumes than weekends, consistent with commuting patterns. Monday through Thursday are roughly equal; Friday is slightly elevated. Saturday and Sunday drop substantially, with Sunday being the lowest-volume day.
 
 ### Plot 12 — Race Distribution of Stopped Drivers by City
 
-Durham and Fayetteville have the highest proportion of Black drivers stopped (>55%). Charlotte has the largest Hispanic share (~12–13%), likely reflecting local demographics. Greensboro and Raleigh have more balanced Black/White shares. Comparing these proportions to Census data would be necessary to determine if any group is over- or under-represented relative to their population.
+Durham and Fayetteville have the highest proportion of Black drivers stopped (>55%). Charlotte has the largest Hispanic share, likely reflecting local demographics. Comparing these proportions to Census data would be necessary to determine if any group is over- or under-represented relative to their population.
 
 ### Plot 13 — Age Distribution by Race
 
-All groups show a right-skewed age distribution peaking in the mid-20s, consistent with young drivers being stopped more frequently. Hispanic drivers skew younger, with a sharper peak around age 22–25. White drivers have a flatter, wider distribution with relatively more stops among 40–60 year-olds. Asian/Pacific Islander drivers have the broadest distribution.
+All groups show a right-skewed age distribution peaking in the mid-20s. Hispanic drivers skew younger, with a sharper peak around age 22–25. White drivers have a flatter, wider distribution with relatively more stops among 40–60 year-olds.
 
 ### Plot 14 — Sex Distribution Overall and by Outcome
 
-Males constitute ~61.6% of all stops and are overrepresented in arrests (~75% of arrest outcomes are male). Female drivers are more likely to receive warnings relative to their share of stops. Only 5 rows have unknown sex, which is negligible.
+Males constitute ~61.6% of all stops and are overrepresented in arrests. Female drivers are more likely to receive warnings relative to their share of stops.
 
 ### Plot 15 — Search Rate by Race
 
-Black drivers are searched at 6.57% of stops — more than double the rate for white drivers (2.97%). Hispanic drivers are searched at 5.46%. Asian/Pacific Islander drivers have the lowest search rate at 2.12%. This large disparity in search rates is a critical factor: if searches drive arrests (as Plot 16 shows), then disparate search rates mechanically produce disparate arrest rates.
+Black drivers are searched at 6.57% of stops — more than double the rate for white drivers (2.97%). Hispanic drivers are searched at 5.46%. Asian/Pacific Islander drivers have the lowest search rate at 2.12%. This large disparity in search rates is a critical factor: if searches drive arrests, then disparate search rates mechanically produce disparate arrest rates.
 
 ### Plot 16 — Arrest Rate: Searched vs. Not Searched, by Race
 
-Being searched dramatically increases the probability of arrest: from <2% to 34–54%. Among unsearched drivers, Hispanic drivers still have the highest arrest rate (1.61% vs. 0.81% Black, 0.59% White). Among searched drivers, an inversion occurs: Hispanic drivers have the highest post-search arrest rate (53.7%), followed by White (45.8%), Asian/PI (43.1%), then Black (34.3%). The lower post-search arrest rate for Black drivers suggests searches of Black drivers may have a lower evidentiary threshold — a pattern consistent with the "outcome test" literature on racial profiling.
+Being searched dramatically increases the probability of arrest: from <2% to 34–54%. Among searched drivers, Hispanic drivers have the highest post-search arrest rate (53.7%), followed by White (45.8%), Asian/PI (43.1%), then Black (34.3%). The lower post-search arrest rate for Black drivers suggests searches of Black drivers may have a lower evidentiary threshold — a pattern consistent with the "outcome test" literature on racial profiling.
 
 ### Plot 17 — Correlation Heatmap
 
-`search_conducted` has the strongest correlation with `arrested` (~0.2), confirming searches as the most important individual predictor. Age has a slight negative correlation with arrest (younger = slightly more likely arrested). Year and hour show near-zero correlations, suggesting temporal features alone are weak linear predictors but may contribute through interactions.
+`search_conducted` has the strongest correlation with `arrested` (~0.5), confirming searches as the most important individual predictor. Age has a slight negative correlation with arrest. Year and hour show near-zero correlations, suggesting temporal features alone are weak linear predictors but may contribute through interactions.
 
 ### Plot 18 — Arrest Rate Tables (CSV)
 
@@ -113,12 +113,12 @@ The race × sex CSV shows male drivers of every race have higher arrest rates th
 
 - **Racial disparities are clear and consistent**: Hispanic drivers face the highest arrest rate (4.45%), followed by Black (3.00%), White (1.93%), and Asian/PI (1.35%). This ranking holds across all six cities and virtually all stop reasons.
 - **City-level variation exists** but does not eliminate the racial gap — Charlotte has the highest rates and widest gaps, Winston-Salem the lowest, but the ranking is the same everywhere (Plot 5).
-- **Stop reason matters but doesn't explain the gap**: The arrest rate varies ~5× between stop reasons (speed violations <1% vs. other motor vehicle violations >5%), but racial gaps persist within each category (Plot 7).
+- **Stop reason matters but doesn't explain the gap**: The arrest rate varies across stop reasons, but racial gaps persist within each category (Plot 7).
 - **Search rates are highly disparate**: Black drivers are searched at 2.2× the White rate (6.57% vs. 2.97%). Since search is the strongest predictor of arrest, this is a key mechanism.
 
 ### Objective 2: Predict arrest escalation
 
-- **Class imbalance**: Only 2.7% of stops result in arrest. Models will need SMOTE, cost-sensitive learning, or evaluation via AUC-PR / F1 rather than accuracy.
+- **Class imbalance**: Only 2.8% of stops result in arrest. Models will need SMOTE, cost-sensitive learning, or evaluation via AUC-PR / F1 rather than accuracy.
 - **Strongest single predictor**: `search_conducted` — arrest probability jumps from ~1% to ~40% when a search occurs.
 - **Useful features**: Race, city, reason for stop, age, sex, and search status all show meaningful variation in arrest rates. Hour and year are weaker individually but may contribute as interactions.
 - **Feature engineering ideas**: Race × search interaction, reason × race, time-of-day buckets (night vs. day), age bins.
@@ -127,19 +127,18 @@ The race × sex CSV shows male drivers of every race have higher arrest rates th
 
 - **Unadjusted disparities are large and consistent**: The descriptive EDA establishes the baseline racial gap.
 - **Within-reason analysis (Plot 7)**: Disparities hold within each stop reason, suggesting they are not fully explained by stop context.
-- **Search as a mediator**: The dramatic effect of search on arrest (Plot 16) combined with disparate search rates (Plot 15) points to search decisions as a key pathway. The "outcome test" finding (lower post-search arrest rates for Black drivers at 34.3% vs. White at 45.8%) suggests possible over-searching of Black drivers.
+- **Search as a mediator**: The dramatic effect of search on arrest (Plot 16) combined with disparate search rates (Plot 15) points to search decisions as a key pathway. The "outcome test" finding (lower post-search arrest rates for Black drivers) suggests possible over-searching of Black drivers.
 - **Recommended modeling approaches**: Logistic regression with race interactions, propensity score matching on situational factors, or Blinder-Oaxaca decomposition. A two-stage model (search decision → arrest | search) could disentangle direct and indirect race effects on arrest outcomes.
 
 ---
 
 ## Data Quality Notes
 
-1. **Missing time data** (~3.9%): Concentrated in Durham (14.8%) and Winston-Salem (21.4%). Hour-based analyses under-represent these cities.
+1. **Missing time data** (~3.9%): Hour-based analyses under-represent cities with higher missingness.
 2. **Missing outcomes** (~3.2%): 139,872 rows lack outcome data. Flagged via `outcome_missing` and retained, but should be excluded from outcome-based models.
 3. **Contraband data unavailable**: Dropped due to >95% missingness. This prevents the canonical "hit rate" test for racial profiling.
-4. **Early-year data sparsity**: Some cities (Durham, Raleigh) have near-zero data before 2002. The 2001 Hispanic arrest rate spike (12.6%) is likely a small-sample artifact — consider filtering to 2002+ for temporal analyses.
+4. **Early-year data sparsity**: Some cities have near-zero data before 2002. Consider filtering to 2002+ for temporal analyses.
 5. **No Census benchmarking**: We cannot assess whether stop *volumes* are disproportionate without population denominators per city.
-6. **No "summons" outcome**: Despite appearing in some SOPP documentation, no summons category exists in this NC data — it may be folded into citations.
 
 ---
 
