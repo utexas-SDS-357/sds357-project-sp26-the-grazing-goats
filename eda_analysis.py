@@ -42,7 +42,12 @@ CITY_ORDER = ["Charlotte", "Raleigh", "Greensboro", "Fayetteville", "Winston-Sal
 DPI = 150
 FIGSIZE = (10, 6)
 
-plt.rcParams.update({"axes.grid": True, "grid.alpha": 0.3})
+plt.rcParams.update({
+    "axes.grid": True,
+    "grid.alpha": 0.3,
+    "axes.titleweight": "bold",
+    "axes.labelweight": "bold",
+})
 
 
 def load_data() -> pd.DataFrame:
@@ -371,7 +376,7 @@ def plot_13_age_distribution_race(df):
 
 def plot_14_sex_distribution_outcome(df):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=FIGSIZE)
-    fig.suptitle("Sex Distribution Overall and by Outcome", fontsize=13)
+    fig.suptitle("Sex Distribution Overall and by Outcome", fontsize=13, fontweight="bold")
 
     sex_vc = df["subject_sex"].value_counts().reindex(["male", "female", "unknown"])
     ax1.bar(sex_vc.index, sex_vc.values, color=sns.color_palette()[:3])

@@ -53,7 +53,7 @@ After filtering to the four major racial groups (Black, White, Hispanic, Asian/P
 
 ### 3.2 Inferential Logistic Regression
 
-We fit a **logistic regression** (via `statsmodels`) on a stratified random sample of ~200,000 stops. The dependent variable is `arrested` (binary). Independent variables include:
+We fit a **logistic regression** (via `statsmodels`) on the full dataset of ~3,961,022 stops. The dependent variable is `arrested` (binary). Independent variables include:
 
 - **Demographics**: `subject_race`, `subject_sex`
 - **Situational**: `subject_age`, `reason_for_stop` (top 8 categories + "Other"), `city`, `search_conducted`, `hour`, `year`
@@ -101,15 +101,15 @@ The full logistic regression results are saved in `report/logistic_coefficients.
 ![Odds Ratios](01_odds_ratios.png)
 
 **Search conducted** is by far the strongest predictor:
-- **search_conducted**: OR = 72.16 (95% CI: 69.30–75.13) — being searched increases the odds of arrest by a factor of ~72.
+- **search_conducted**: OR = 69.61 (95% CI: 68.43–70.82) — being searched increases the odds of arrest by a factor of ~70.
 
 **Race effects** (reference: Asian/Pacific Islander or the dropped first category):
-- **Black**: OR = 2.00 (95% CI: 1.74–2.30)
-- **Hispanic**: OR = 2.60 (95% CI: 2.25–3.00)
-- **White**: OR = 1.35 (95% CI: 1.17–1.55)
+- **Black**: OR = 1.33 (95% CI: 1.22–1.44)
+- **Hispanic**: OR = 1.97 (95% CI: 1.81–2.14)
+- **White**: OR = 1.24 (95% CI: 1.14–1.34)
 
 **Sex effects** (reference: Female):
-- **Male**: OR = 1.76 (95% CI: 1.71–1.82)
+- **Male**: OR = 1.31 (95% CI: 1.28–1.33)
 
 ### 4.2 Interpretation
 
@@ -225,7 +225,7 @@ This plot shows what percentage of each racial group's arrests were flagged as "
 
 ![Unexpected Arrests by City and Race](08_unexpected_arrests_city_race.png)
 
-Because the model uses balanced class weights (to handle the 97:3 class imbalance), it calibrates predicted probabilities higher than the raw base rate, resulting in predicted arrest rates above actual rates across all cities. The absolute rate differences are therefore less meaningful than the **relative** differences across cities: cities with a smaller gap (closer to zero) have arrest patterns more consistent with what the model expects given situational factors, while larger gaps suggest the model's features leave more of the arrest behavior unexplained. **Durham** (−0.06pp) and **Fayetteville** (−0.22pp) are closest to the predicted rate, while **Charlotte** (−1.93pp) has the largest gap — potentially reflecting Charlotte's more complex policing environment. However, the critical metric is not the gap itself but the **racial composition of unexpected arrests within each city**, shown above.
+Cities where the actual arrest rate substantially exceeds the predicted rate (positive rate difference) warrant closer examination. Conversely, cities below the predicted rate may have more restrained arrest practices.
 
 ### 6.5 Statistical Significance
 

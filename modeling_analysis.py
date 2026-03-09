@@ -81,29 +81,28 @@ def _top_reasons(df, n=8):
 
 def run_inferential_logistic(df):
     print("\n── Part 1: Inferential Logistic Regression ──")
-    sample = df.groupby("arrested", group_keys=False).apply(
-        lambda x: x.sample(min(100_000, len(x)), random_state=SEED)
-    ).reset_index(drop=True)
-    print(f"  Sample size: {len(sample):,}")
+    print(f"  Using full dataset: {len(df):,} rows")
 
-    top = _top_reasons(sample)
-    sample["reason_cat"] = sample["reason_for_stop"].where(
-        sample["reason_for_stop"].isin(top), "Other")
+    top = _top_reasons(df)
+    dflog = df.copy()
+    dflog["reason_cat"] = dflog["reason_for_stop"].where(
+        dflog["reason_for_stop"].isin(top), "Other")
 
     X = pd.get_dummies(
-        sample[["subject_race", "subject_sex", "subject_age",
-                "reason_cat", "city", "search_conducted", "hour", "year"]],
+        dflog[["subject_race", "subject_sex", "subject_age",
+               "reason_cat", "city", "search_conducted", "hour", "year"]],
         columns=["subject_race", "subject_sex", "reason_cat", "city"],
         drop_first=True, dtype=float,
     )
     X["search_conducted"] = X["search_conducted"].astype(float)
     X = sm.add_constant(X)
-    y = sample["arrested"]
+    y = dflog["arrested"]
 
     mask = X.notna().all(axis=1) & y.notna()
     X, y = X[mask], y[mask]
     print(f"  After dropping NaN rows: {len(X):,}")
 
+    print("  Fitting logistic regression (this may take a few minutes) …")
     model = sm.Logit(y, X).fit(disp=0, maxiter=200)
     print(f"  Pseudo-R²: {model.prsquared:.4f}")
 
@@ -122,20 +121,32 @@ def plot_odds_ratios(res):
     plot_df = res.drop(index=["const"], errors="ignore").copy()
     plot_df = plot_df[plot_df["p_value"] < 0.05].sort_values("odds_ratio")
 
-    fig, ax = plt.subplots(figsize=(10, max(6, len(plot_df) * 0.35)))
+    fig, ax = plt.subplots(figsize=FIG)
     colors = ["#d63031" if v > 1 else "#0984e3" for v in plot_df["odds_ratio"]]
 
-    ax.barh(range(len(plot_df)), plot_df["odds_ratio"] - 1, left=1,
-            color=colors, alpha=0.7, height=0.6)
+    bars = ax.barh(range(len(plot_df)), plot_df["odds_ratio"] - 1, left=1,
+                   color=colors, alpha=0.7, height=0.6)
     ax.errorbar(plot_df["odds_ratio"], range(len(plot_df)),
                 xerr=[plot_df["odds_ratio"] - plot_df["or_ci_lower"],
                       plot_df["or_ci_upper"] - plot_df["odds_ratio"]],
                 fmt="none", ecolor="black", capsize=3, linewidth=1)
+    bbox = dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none",
+                alpha=0.85)
+    for i, (idx, row) in enumerate(plot_df.iterrows()):
+        orv = row["odds_ratio"]
+        ci_upper = row["or_ci_upper"]
+        ci_lower = row["or_ci_lower"]
+        if orv >= 1:
+            ax.text(ci_upper + 0.5, i, f"{orv:.2f}", va="center",
+                    fontsize=8, fontweight="bold", bbox=bbox)
+        else:
+            ax.text(ci_lower - 0.5, i, f"{orv:.2f}", va="center",
+                    ha="right", fontsize=8, fontweight="bold", bbox=bbox)
     ax.axvline(1, color="black", ls="--", lw=1)
     ax.set_yticks(range(len(plot_df)))
-    ax.set_yticklabels(plot_df.index, fontsize=8)
-    ax.set_xlabel("Odds Ratio")
-    ax.set_title("Logistic Regression Odds Ratios for Arrest\n(Full Model with Demographics)")
+    ax.set_yticklabels(plot_df.index, fontsize=8, fontweight="bold")
+    ax.set_xlabel("Odds Ratio", fontweight="bold")
+    ax.set_title("Logistic Regression Odds Ratios for Arrest\n(Full Model with Demographics)", fontweight="bold")
     plt.tight_layout()
     fig.savefig(OUT_DIR / "01_odds_ratios.png", dpi=DPI)
     plt.close(fig)
@@ -190,8 +201,10 @@ def plot_feature_associations(assoc):
     sns.heatmap(pivot, annot=True, fmt=".3f", cmap="YlOrRd", ax=ax,
                 linewidths=0.5, cbar_kws={"label": "Association Strength"})
     ax.grid(False)
-    ax.set_title("Feature Association with Protected Attributes\n(Cramér's V for categorical, η² for numerical)")
+    ax.set_title("Feature Association with Protected Attributes\n(Cramér's V for categorical, η² for numerical)", fontweight="bold")
     ax.set_ylabel("")
+    ax.set_xticklabels(ax.get_xticklabels(), fontweight="bold")
+    ax.set_yticklabels(ax.get_yticklabels(), fontweight="bold")
     plt.tight_layout()
     fig.savefig(OUT_DIR / "02_feature_associations.png", dpi=DPI)
     plt.close(fig)
@@ -263,19 +276,19 @@ def plot_roc_pr(y_te, prob_te, metrics):
     fpr, tpr, _ = roc_curve(y_te, prob_te)
     prec, rec, _ = precision_recall_curve(y_te, prob_te)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=FIG)
     ax1.plot(fpr, tpr, color="#0984e3", lw=2)
     ax1.plot([0, 1], [0, 1], "k--", lw=1)
-    ax1.set_xlabel("False Positive Rate")
-    ax1.set_ylabel("True Positive Rate")
-    ax1.set_title(f"ROC Curve  (AUC = {metrics['auc_roc']:.4f})")
+    ax1.set_xlabel("False Positive Rate", fontweight="bold")
+    ax1.set_ylabel("True Positive Rate", fontweight="bold")
+    ax1.set_title(f"ROC Curve  (AUC = {metrics['auc_roc']:.4f})", fontweight="bold")
 
     ax2.plot(rec, prec, color="#d63031", lw=2)
     ax2.axhline(y_te.mean(), color="gray", ls="--", lw=1,
                 label=f"Baseline = {y_te.mean():.3f}")
-    ax2.set_xlabel("Recall")
-    ax2.set_ylabel("Precision")
-    ax2.set_title(f"Precision-Recall Curve  (AUC-PR = {metrics['auc_pr']:.4f})")
+    ax2.set_xlabel("Recall", fontweight="bold")
+    ax2.set_ylabel("Precision", fontweight="bold")
+    ax2.set_title(f"Precision-Recall Curve  (AUC-PR = {metrics['auc_pr']:.4f})", fontweight="bold")
     ax2.legend()
 
     plt.tight_layout()
@@ -300,11 +313,15 @@ def plot_feature_importance(clf, feat_names, X_te, y_te):
 
     order = np.argsort(imp)
     fig, ax = plt.subplots(figsize=FIG)
-    ax.barh(range(len(imp)), imp[order], color="#6c5ce7")
+    bars = ax.barh(range(len(imp)), imp[order], color="#6c5ce7")
+    for bar, idx in zip(bars, order):
+        val = imp[idx]
+        ax.text(bar.get_width() + 0.001, bar.get_y() + bar.get_height() / 2,
+                f"{val:.4f}", va="center", fontsize=9, fontweight="bold")
     ax.set_yticks(range(len(imp)))
-    ax.set_yticklabels([feat_names[i] for i in order])
-    ax.set_xlabel(imp_label)
-    ax.set_title("Race-Blind Model — Feature Importance")
+    ax.set_yticklabels([feat_names[i] for i in order], fontweight="bold")
+    ax.set_xlabel(imp_label, fontweight="bold")
+    ax.set_title("Race-Blind Model — Feature Importance", fontweight="bold")
     plt.tight_layout()
     fig.savefig(OUT_DIR / "04_feature_importance.png", dpi=DPI)
     plt.close(fig)
@@ -410,9 +427,9 @@ def plot_bias_race(race_comp):
         vals = race_comp.loc[MAIN_RACES, col].values
         ax.bar(x + i * w, vals, w, label=col, color=c)
     ax.set_xticks(x + 1.5 * w)
-    ax.set_xticklabels([RACE_LABELS[r] for r in MAIN_RACES])
-    ax.set_ylabel("Percentage (%)")
-    ax.set_title("Racial Composition Across Flag Categories")
+    ax.set_xticklabels([RACE_LABELS[r] for r in MAIN_RACES], fontweight="bold")
+    ax.set_ylabel("Percentage (%)", fontweight="bold")
+    ax.set_title("Racial Composition Across Flag Categories", fontweight="bold")
     ax.legend()
     plt.tight_layout()
     fig.savefig(OUT_DIR / "05_bias_race_composition.png", dpi=DPI)
@@ -421,7 +438,7 @@ def plot_bias_race(race_comp):
 
 
 def plot_bias_sex(sex_comp):
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=FIG)
     cols = ["All Stops", "All Arrests", "Unexpected Arrests",
             "Expected Arrests"]
     palette = ["#636e72", "#d63031", "#e17055", "#00b894"]
@@ -431,9 +448,9 @@ def plot_bias_sex(sex_comp):
         vals = sex_comp.loc[["male", "female"], col].values
         ax.bar(x + i * w, vals, w, label=col, color=c)
     ax.set_xticks(x + 1.5 * w)
-    ax.set_xticklabels(["Male", "Female"])
-    ax.set_ylabel("Percentage (%)")
-    ax.set_title("Sex Composition Across Flag Categories")
+    ax.set_xticklabels(["Male", "Female"], fontweight="bold")
+    ax.set_ylabel("Percentage (%)", fontweight="bold")
+    ax.set_title("Sex Composition Across Flag Categories", fontweight="bold")
     ax.legend()
     plt.tight_layout()
     fig.savefig(OUT_DIR / "06_bias_sex_composition.png", dpi=DPI)
@@ -450,9 +467,9 @@ def plot_city_flags(city_flags):
     ax.bar(x + w / 2, city_flags.loc[CITY_ORDER, "predicted_rate"], w,
            label="Predicted Arrest Rate", color="#0984e3")
     ax.set_xticks(x)
-    ax.set_xticklabels(CITY_ORDER, rotation=15)
-    ax.set_ylabel("Arrest Rate (%)")
-    ax.set_title("Actual vs. Race-Blind Predicted Arrest Rate by City")
+    ax.set_xticklabels(CITY_ORDER, rotation=15, fontweight="bold")
+    ax.set_ylabel("Arrest Rate (%)", fontweight="bold")
+    ax.set_title("Actual vs. Race-Blind Predicted Arrest Rate by City", fontweight="bold")
     ax.legend()
     for i, city in enumerate(CITY_ORDER):
         diff = city_flags.loc[city, "rate_diff"]
@@ -471,9 +488,9 @@ def plot_unexpected_arrests_city_race(ua_city_race):
     fig, ax = plt.subplots(figsize=FIG)
     ua_city_race.plot(kind="bar", stacked=True, ax=ax,
                       color=sns.color_palette()[:4], width=0.7)
-    ax.set_ylabel("% of Unexpected Arrests")
-    ax.set_xlabel("City")
-    ax.set_title("Racial Composition of Unexpected Arrests by City")
+    ax.set_ylabel("% of Unexpected Arrests", fontweight="bold")
+    ax.set_xlabel("City", fontweight="bold")
+    ax.set_title("Racial Composition of Unexpected Arrests by City", fontweight="bold")
     ax.set_xticklabels(ax.get_xticklabels(), rotation=15)
     ax.legend(title="Race", labels=[RACE_LABELS[r] for r in MAIN_RACES])
     ax.set_ylim(0, 100)
@@ -484,7 +501,7 @@ def plot_unexpected_arrests_city_race(ua_city_race):
 
 
 def plot_unexpected_rate_by_race(ua_rates):
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=FIG)
     races = ua_rates.index.tolist()
     vals = ua_rates.values
     colors = ["#d63031" if r in ["black", "hispanic"] else "#0984e3" for r in races]
@@ -492,8 +509,9 @@ def plot_unexpected_rate_by_race(ua_rates):
     for bar, v in zip(bars, vals):
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.3,
                 f"{v:.1f}%", ha="center", fontsize=10)
-    ax.set_ylabel("% of Group's Arrests That Are 'Unexpected'")
-    ax.set_title("Share of Arrests Flagged as Unexpected, by Race")
+    ax.set_xticklabels([RACE_LABELS[r] for r in races], fontweight="bold")
+    ax.set_ylabel("% of Group's Arrests That Are 'Unexpected'", fontweight="bold")
+    ax.set_title("Share of Arrests Flagged as Unexpected, by Race", fontweight="bold")
     plt.tight_layout()
     fig.savefig(OUT_DIR / "09_unexpected_rate_by_race.png", dpi=DPI)
     plt.close(fig)
@@ -580,7 +598,7 @@ After filtering to the four major racial groups (Black, White, Hispanic, Asian/P
 
 ### 3.2 Inferential Logistic Regression
 
-We fit a **logistic regression** (via `statsmodels`) on a stratified random sample of ~200,000 stops. The dependent variable is `arrested` (binary). Independent variables include:
+We fit a **logistic regression** (via `statsmodels`) on the full dataset of ~{n:,} stops. The dependent variable is `arrested` (binary). Independent variables include:
 
 - **Demographics**: `subject_race`, `subject_sex`
 - **Situational**: `subject_age`, `reason_for_stop` (top 8 categories + "Other"), `city`, `search_conducted`, `hour`, `year`

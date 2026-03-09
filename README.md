@@ -34,3 +34,8 @@ python clean_data.py
 ```bash
 python eda_analysis.py
 ```
+
+## Model
+```bash
+python modeling_analysis.py
+```
