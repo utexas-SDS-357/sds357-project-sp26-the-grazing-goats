@@ -4,3 +4,6 @@ pyarrow
 matplotlib
 seaborn
 scipy
+scikit-learn
+statsmodels
+tabulate
