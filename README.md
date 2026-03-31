@@ -1,82 +1,82 @@
+# Racial Disparities in North Carolina Traffic Stop Arrests
+
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/MFzEnxem)
 
-# Racial Disparities in Traffic Stops (North Carolina)
+**SDS 357 — Spring 2026 | The Grazing Goats**
 
-## Project Overview
-This project analyzes racial disparities in traffic stop outcomes across six major North Carolina cities (Charlotte, Raleigh, Greensboro, Durham, Winston-Salem, Fayetteville) using data from the Stanford Open Policing Project (SOPP) and FBI Uniform Crime Reporting (UCR).
+Analysis of 4M+ traffic stops across six North Carolina cities (2000–2015) using data from the [Stanford Open Policing Project](https://openpolicing.stanford.edu/) (SOPP), supplemented with FBI Uniform Crime Report statistics.
 
-Our goal is to:
-- Examine whether arrest outcomes differ by race after controlling for situational factors  
-- Build a race-blind predictive model to identify “unexpected” arrests  
-- Evaluate fairness using post-search arrest rates  
+## Research Question
 
-## Data Description
-- **Primary Data:** Stanford Open Policing Project (SOPP)  
-  - ~4.3 million traffic stops (2007–2014) across 6 cities  
-  - Includes driver demographics, stop reason, and outcomes  
+Do racial disparities exist in traffic stop arrest outcomes across NC cities, and can arrest likelihood be predicted from race-blind situational factors alone?
 
-- **Supplemental Data:** FBI’s Uniform Crime Reporting (FBI UCR) 
-  - County-level population and law enforcement data for North Carolina cities from 2000-2015
-  - Includes city population, total law enforcement employees, total officers, and total civilians 
+## Project Structure
 
----
-
-## Data cleaning pipeline
-
-0. Download SOPP CSV files and put them in the `raw_data/` directory in the root:
-
-```text
+```
 .
-├── clean_data.py
+├── clean_data.py                     # Data cleaning pipeline (SOPP → Parquet)
+├── 01_eda.ipynb                      # Exploratory data analysis & FBI crime context
+├── 02_inferential_analysis.ipynb     # Logistic regression (odds ratios)
+├── 03_predictive_model.ipynb         # Race-blind gradient-boosted classifier
+├── data/
+│   ├── nc_traffic_stops_cleaned.parquet   # Cleaned traffic stop data
+│   └── nc_fbi_crime_data_clean.csv        # FBI UCR crime rates by city-year
+├── eda/                              # Pre-generated EDA visualizations
 ├── requirements.txt
-├── raw_data/
-│   ├── nc_charlotte_2020_04_01.csv
-│   ├── nc_durham_2020_04_01.csv
-│   ├── nc_fayetteville_2020_04_01.csv
-│   ├── nc_greensboro_2020_04_01.csv
-│   ├── nc_raleigh_2020_04_01.csv
-│   └── nc_winston-salem_2020_04_01.csv
+└── README.md
 ```
 
-1. Set up the environment
+## Setup
+
 ```bash
-python3 -m venv .venv # only run this the first time
-source .venv/bin/activate  # macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-2. Run the cleaning script
+## Reproducing the Analysis
+
+### 1. Data Cleaning
+
+Download the SOPP CSV files for NC cities into a `raw_data/` directory, then run:
 
 ```bash
 python clean_data.py
 ```
 
-## EDA
-```bash
-python eda_analysis.py
-```
+This reads raw CSVs, standardizes columns, engineers features, and outputs `data/nc_traffic_stops_cleaned.parquet`.
 
-## Model
-```bash
-python modeling_analysis.py
-```
----
+### 2. Exploratory Data Analysis
 
-## Workflow 
+Open and run **`01_eda.ipynb`**:
+- Arrest rates by race (with 95% confidence intervals)
+- Arrest rate heatmap (race × city)
+- Search rate disparities by race
+- FBI crime rate context (violent & property crime vs. arrest rates)
 
-**Raw Data → Cleaning → EDA → Modeling → Results**
+### 3. Inferential Analysis
 
-- `clean_data.py`: merges and cleans city-level datasets, creates features (e.g., time, demographics, arrest indicator)  
-- `eda_analysis.py`: generates summary statistics and visualizations of trends across race, city, and stop reason  
-- `modeling_analysis.py`: builds a race-blind gradient boosted model to predict arrest outcomes  
+Open and run **`02_inferential_analysis.ipynb`**:
+- Logistic regression: P(Arrest | demographics, stop conditions, FBI crime rate)
+- Odds ratio visualization with confidence intervals
+- Quantifies independent contribution of race after controlling for confounders
 
-### Example use
-Given a traffic stop’s context (reason, time, location), the model predicts whether an arrest is expected.  
-Stops where actual outcomes differ from predictions are flagged for further fairness analysis.
+### 4. Predictive Modeling
 
+Open and run **`03_predictive_model.ipynb`**:
+- Race-blind `HistGradientBoostingClassifier` (no race or sex features)
+- Handles 97:3 class imbalance with `class_weight="balanced"`
+- ROC/PR curves, optimal F1 threshold selection, confusion matrix
+- Permutation importance to identify key predictors
 
-## Dependencies
-All required Python packages are listed in:
-```bash
-requirements.txt
-```
+## Data Sources
+
+| Source | Description |
+|--------|-------------|
+| [Stanford Open Policing Project](https://openpolicing.stanford.edu/) | Traffic stop records for Charlotte, Durham, Fayetteville, Greensboro, Raleigh, Winston-Salem |
+| [FBI Uniform Crime Reports](https://ucr.fbi.gov/) | City-level violent and property crime rates |
+
+## Requirements
+
+- Python 3.9+
+- See `requirements.txt` for package dependencies (pandas, scikit-learn, statsmodels, seaborn, etc.)

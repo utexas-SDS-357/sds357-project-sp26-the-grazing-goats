@@ -1,7 +1,24 @@
+# Data — raw and large processed files
 raw_data/
+Stanford Data/
+nc_traffic_stops_cleaned.csv
 data/nc_traffic_stops_cleaned.csv
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
 .venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Presentations (generated / Office temp files)
 SDS357 Midterm Presentation.pptx
-~$SDS357 Midterm Presentation.pptx
+~$*.pptx
 create_presentation.py
