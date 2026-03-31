@@ -15,7 +15,7 @@ Our goal is to:
   - ~4.3 million traffic stops (2007–2014) across 6 cities  
   - Includes driver demographics, stop reason, and outcomes  
 
-- **Supplemental Data:** FBI UCR  
+- **Supplemental Data:** FBI’s Uniform Crime Reporting (FBI UCR) 
   - County-level population and law enforcement data for North Carolina cities from 2000-2015
   - Includes city population, total law enforcement employees, total officers, and total civilians 
 
