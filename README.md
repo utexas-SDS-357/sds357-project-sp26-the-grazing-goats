@@ -14,11 +14,11 @@ Do racial disparities exist in traffic stop arrest outcomes across NC cities, an
 
 ```
 .
+├── 00_fbi_cleaning_file.ipynb            # FBI UCR raw XLS → cleaned CSV pipeline
 ├── 01_eda.ipynb                          # Exploratory data analysis & FBI crime context
 ├── 02_inferential_analysis.ipynb         # Logistic regression (odds ratios)
 ├── 03_predictive_model.ipynb             # Race-blind gradient-boosted classifier
 ├── final_analysis(without_search).ipynb  # Combined analysis (excludes search-rate features)
-├── fbi_cleaning_file.ipynb               # FBI UCR raw XLS → cleaned CSV pipeline
 ├── data/
 │   ├── nc_traffic_stops_cleaned.parquet  # Cleaned traffic stop data
 │   ├── nc_fbi_crime_data_clean.csv       # FBI UCR crime rates by city-year
@@ -42,10 +42,10 @@ All notebook outputs are pre-executed and viewable directly on GitHub.
 
 ### 1. Data Cleaning
 
-**`fbi_cleaning_file.ipynb`**:
+**`00_fbi_cleaning_file.ipynb`**:
 - Reads raw FBI UCR `.xls` spreadsheets from `data/NC_FBI_Data/`
 - Standardizes column names across years, filters to the six target cities
-- Outputs `NC_FBI_crime_data_clean.csv`
+- Outputs `nc_fbi_crime_data_clean.csv`
 
 ### 2. Exploratory Data Analysis
 
