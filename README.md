@@ -14,14 +14,15 @@ Do racial disparities exist in traffic stop arrest outcomes across NC cities, an
 
 ```
 .
-├── clean_data.py                     # Data cleaning pipeline (SOPP → Parquet)
-├── 01_eda.ipynb                      # Exploratory data analysis & FBI crime context
-├── 02_inferential_analysis.ipynb     # Logistic regression (odds ratios)
-├── 03_predictive_model.ipynb         # Race-blind gradient-boosted classifier
+├── 01_eda.ipynb                          # Exploratory data analysis & FBI crime context
+├── 02_inferential_analysis.ipynb         # Logistic regression (odds ratios)
+├── 03_predictive_model.ipynb             # Race-blind gradient-boosted classifier
+├── final_analysis(without_search).ipynb  # Combined analysis (excludes search-rate features)
 ├── data/
-│   ├── nc_traffic_stops_cleaned.parquet   # Cleaned traffic stop data
-│   └── nc_fbi_crime_data_clean.csv        # FBI UCR crime rates by city-year
-├── eda/                              # Pre-generated EDA visualizations
+│   ├── nc_traffic_stops_cleaned.parquet  # Cleaned traffic stop data
+│   ├── nc_fbi_crime_data_clean.csv       # FBI UCR crime rates by city-year
+│   └── NC_FBI_Data/                      # Raw FBI UCR spreadsheets (2000–2015)
+├── eda/                                  # Pre-generated EDA visualizations (PNGs)
 ├── requirements.txt
 └── README.md
 ```
@@ -29,45 +30,43 @@ Do racial disparities exist in traffic stop arrest outcomes across NC cities, an
 ## Setup
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
 ## Reproducing the Analysis
 
-### 1. Data Cleaning
+All notebook outputs are pre-executed and viewable directly on GitHub.
 
-Download the SOPP CSV files for NC cities into a `raw_data/` directory, then run:
+### 1. Exploratory Data Analysis
 
-```bash
-python clean_data.py
-```
-
-This reads raw CSVs, standardizes columns, engineers features, and outputs `data/nc_traffic_stops_cleaned.parquet`.
-
-### 2. Exploratory Data Analysis
-
-Open and run **`01_eda.ipynb`**:
+**`01_eda.ipynb`**:
 - Arrest rates by race (with 95% confidence intervals)
 - Arrest rate heatmap (race × city)
 - Search rate disparities by race
 - FBI crime rate context (violent & property crime vs. arrest rates)
 
-### 3. Inferential Analysis
+### 2. Inferential Analysis
 
-Open and run **`02_inferential_analysis.ipynb`**:
+**`02_inferential_analysis.ipynb`**:
 - Logistic regression: P(Arrest | demographics, stop conditions, FBI crime rate)
 - Odds ratio visualization with confidence intervals
 - Quantifies independent contribution of race after controlling for confounders
 
-### 4. Predictive Modeling
+### 3. Predictive Modeling
 
-Open and run **`03_predictive_model.ipynb`**:
+**`03_predictive_model.ipynb`**:
 - Race-blind `HistGradientBoostingClassifier` (no race or sex features)
 - Handles 97:3 class imbalance with `class_weight="balanced"`
 - ROC/PR curves, optimal F1 threshold selection, confusion matrix
 - Permutation importance to identify key predictors
+
+### 4. Combined Analysis (without search features)
+
+**`final_analysis(without_search).ipynb`**:
+- End-to-end analysis excluding search-rate features
+- Evaluates arrest prediction without search-related variables
 
 ## Data Sources
 
