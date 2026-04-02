@@ -14,11 +14,11 @@ Do racial disparities exist in traffic stop arrest outcomes across NC cities, an
 
 ```
 .
-├── 00_fbi_cleaning_file.ipynb                # Build nc_fbi_crime_data_clean.csv from raw FBI UCR files
-├── 01_eda.ipynb                              # Exploratory data analysis & FBI crime context
-├── 02_inferential_analysis.ipynb             # Logistic regression (odds ratios)
-├── 03_predictive_model.ipynb                 # Race-blind gradient-boosted classifier
-├── final_analysis(without_search).ipynb      # Combined analysis (excludes search-rate features)
+├── 01_eda.ipynb                          # Exploratory data analysis & FBI crime context
+├── 02_inferential_analysis.ipynb         # Logistic regression (odds ratios)
+├── 03_predictive_model.ipynb             # Race-blind gradient-boosted classifier
+├── final_analysis(without_search).ipynb  # Combined analysis (excludes search-rate features)
+├── fbi_cleaning_file.ipynb               # FBI UCR raw XLS → cleaned CSV pipeline
 ├── data/
 │   ├── nc_traffic_stops_cleaned.parquet  # Cleaned traffic stop data
 │   ├── nc_fbi_crime_data_clean.csv       # FBI UCR crime rates by city-year
@@ -40,11 +40,14 @@ pip install -r requirements.txt
 
 All notebook outputs are pre-executed and viewable directly on GitHub.
 
-### 0. FBI data cleaning (optional)
+### 1. Data Cleaning
 
-**`00_fbi_cleaning_file.ipynb`**: loads raw UCR spreadsheets from `data/NC_FBI_Data/` and reproduces `data/nc_fbi_crime_data_clean.csv`. Run this only if you need to regenerate the cleaned FBI panel; downstream notebooks assume the CSV is already present.
+**`fbi_cleaning_file.ipynb`**:
+- Reads raw FBI UCR `.xls` spreadsheets from `data/NC_FBI_Data/`
+- Standardizes column names across years, filters to the six target cities
+- Outputs `NC_FBI_crime_data_clean.csv`
 
-### 1. Exploratory Data Analysis
+### 2. Exploratory Data Analysis
 
 **`01_eda.ipynb`**:
 - Arrest rates by race (with 95% confidence intervals)
@@ -52,14 +55,14 @@ All notebook outputs are pre-executed and viewable directly on GitHub.
 - Search rate disparities by race
 - FBI crime rate context (violent & property crime vs. arrest rates)
 
-### 2. Inferential Analysis
+### 3. Inferential Analysis
 
 **`02_inferential_analysis.ipynb`**:
 - Logistic regression: P(Arrest | demographics, stop conditions, FBI crime rate)
 - Odds ratio visualization with confidence intervals
 - Quantifies independent contribution of race after controlling for confounders
 
-### 3. Predictive Modeling
+### 4. Predictive Modeling
 
 **`03_predictive_model.ipynb`**:
 - Race-blind `HistGradientBoostingClassifier` (no race or sex features)
@@ -67,7 +70,7 @@ All notebook outputs are pre-executed and viewable directly on GitHub.
 - ROC/PR curves, optimal F1 threshold selection, confusion matrix
 - Permutation importance to identify key predictors
 
-### 4. Combined Analysis (without search features)
+### 5. Combined Analysis (without search features)
 
 **`final_analysis(without_search).ipynb`**:
 - End-to-end analysis excluding search-rate features
@@ -78,7 +81,7 @@ All notebook outputs are pre-executed and viewable directly on GitHub.
 | Source | Description |
 |--------|-------------|
 | [Stanford Open Policing Project](https://openpolicing.stanford.edu/) | Traffic stop records for Charlotte, Durham, Fayetteville, Greensboro, Raleigh, Winston-Salem |
-| [FBI Uniform Crime Reports](https://ucr.fbi.gov/) | City-level violent and property crime rates |
+| [FBI Uniform Crime Reports](https://ucr.fbi.gov/) | City-level violent and property crime rates (2000–2015) |
 
 ## Requirements
 
