@@ -14,20 +14,29 @@ Do racial disparities exist in traffic stop arrest outcomes across NC cities, an
 
 ```
 .
-├── 00_FBI_CLEANING_FILE.ipynb            # FBI UCR raw XLS → cleaned CSV pipeline
-├── 01_EDA.ipynb                          # Exploratory data analysis & FBI crime context
-├── 02_INFERENTIAL_ANALYSIS.ipynb         # Logistic regression (odds ratios)
-├── 03_PREDICTIVE_MODEL.ipynb             # Race-blind gradient-boosted classifier
-├── 04_FLAGGING_SYSTEM.ipynb              # Flagging system for stop anomalies
+├── data_preprocessing/
+│   └── 00_FBI_CLEANING_FILE.ipynb        # FBI UCR raw XLS → cleaned CSV pipeline
+├── eda/
+│   ├── 01_EDA.ipynb                      # Exploratory data analysis & FBI crime context
+│   └── *.png                             # Pre-generated EDA visualizations
+├── inferential/
+│   └── 02_INFERENTIAL_ANALYSIS.ipynb     # Logistic regression (odds ratios)
+├── predictive/
+│   └── 03_PREDICTIVE_MODEL.ipynb         # Race-blind gradient-boosted classifier
+├── flagging/
+│   └── 04_FLAGGING_SYSTEM.ipynb          # Flagging system for stop anomalies
 ├── COMPLETE_PROJECT.ipynb                # Full combined analysis
+├── constants.py                          # Shared constants (seeds, palettes, label maps)
 ├── data/
 │   ├── nc_traffic_stops_cleaned.parquet  # Cleaned traffic stop data
 │   ├── nc_fbi_crime_data_clean.csv       # FBI UCR crime rates by city-year
-│   └── NC_FBI_UCR_RAW_DATA/                      # Raw FBI UCR spreadsheets (2000–2015)
-├── eda/                                  # Pre-generated EDA visualizations (PNGs)
+│   └── NC_FBI_UCR_RAW_DATA/              # Raw FBI UCR spreadsheets (2000–2015)
 ├── requirements.txt
 └── README.md
 ```
+
+Each stage notebook lives in its own folder. Notebooks reference shared inputs
+via `../data/...` and import the shared `constants.py` from the project root.
 
 ## Setup
 
@@ -41,16 +50,16 @@ pip install -r requirements.txt
 
 All notebook outputs are pre-executed and viewable directly on GitHub.
 
-### 1. Data Cleaning
+### 1. Data Preprocessing
 
-**`00_FBI_CLEANING_FILE.ipynb`**:
+**`data_preprocessing/00_FBI_CLEANING_FILE.ipynb`**:
 - Reads raw FBI UCR `.xls` spreadsheets from `data/NC_FBI_UCR_RAW_DATA/`
 - Standardizes column names across years, filters to the six target cities
-- Outputs `nc_fbi_crime_data_clean.csv`
+- Outputs `data/nc_fbi_crime_data_clean.csv`
 
 ### 2. Exploratory Data Analysis
 
-**`01_EDA.ipynb`**:
+**`eda/01_EDA.ipynb`**:
 - Arrest rates by race (with 95% confidence intervals)
 - Arrest rate heatmap (race × city)
 - Search rate disparities by race
@@ -58,14 +67,14 @@ All notebook outputs are pre-executed and viewable directly on GitHub.
 
 ### 3. Inferential Analysis
 
-**`02_INFERENTIAL_ANALYSIS.ipynb`**:
+**`inferential/02_INFERENTIAL_ANALYSIS.ipynb`**:
 - Logistic regression: P(Arrest | demographics, stop conditions, FBI crime rate)
 - Odds ratio visualization with confidence intervals
 - Quantifies independent contribution of race after controlling for confounders
 
 ### 4. Predictive Modeling
 
-**`03_PREDICTIVE_MODEL.ipynb`**:
+**`predictive/03_PREDICTIVE_MODEL.ipynb`**:
 - Race-blind `HistGradientBoostingClassifier` (no race or sex features)
 - Handles 97:3 class imbalance with `class_weight="balanced"`
 - ROC/PR curves, optimal F1 threshold selection, confusion matrix
@@ -73,7 +82,7 @@ All notebook outputs are pre-executed and viewable directly on GitHub.
 
 ### 5. Flagging System
 
-**`04_FLAGGING_SYSTEM.ipynb`**:
+**`flagging/04_FLAGGING_SYSTEM.ipynb`**:
 - Flagging system for identifying anomalous stop patterns
 
 ### 6. Complete Project
